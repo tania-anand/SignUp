@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "13205946997",
+    "firebase_url": "https://myfirebase-520d1.firebaseio.com",
+    "project_id": "myfirebase-520d1",
+    "storage_bucket": "myfirebase-520d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13205946997:android:aa4bf546fa5af95d",
+        "android_client_info": {
+          "package_name": "myfirebase.hppavillion.com.myfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "13205946997-ak44kc5nna58thc474hh04aik0d7344f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtD18dzYuGh1w9agmuE-3SqTRXWAwuyew"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13205946997:android:4a0ae36e854aa55f",
+        "android_client_info": {
+          "package_name": "com.example.tania.kcmodule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "13205946997-ak44kc5nna58thc474hh04aik0d7344f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtD18dzYuGh1w9agmuE-3SqTRXWAwuyew"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
