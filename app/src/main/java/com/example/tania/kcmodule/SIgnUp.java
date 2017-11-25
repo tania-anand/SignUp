@@ -2,6 +2,7 @@ package com.example.tania.kcmodule;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -73,6 +75,9 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
 
         mAuth = FirebaseAuth.getInstance();
 
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference();
+
+
     }
 
     @Override
@@ -81,6 +86,14 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
         email = edemail.getText().toString().trim();
         password=edpassword.getText().toString().trim();
 
+
+
+        if (v.getId() == R.id.textview_signIn)
+        {
+            registerFlag=false;
+            signup.setText("Sign In");
+
+        }
         if(validateFields())
         {
             if (v.getId() == R.id.buttonlogin)
@@ -93,13 +106,6 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
                     signIn();
 
             }
-
-        }
-
-        if (v.getId() == R.id.textview_signIn)
-        {
-            registerFlag=false;
-            signup.setText("Sign In");
 
         }
 
@@ -127,6 +133,9 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
                                 Log.d("error", "createUserWithEmail:success");
                                 mUsersDatabase.child(DATABASENAME).child(uid).child("EMAIL").setValue(email);
                                 mUsersDatabase.child(DATABASENAME).child(uid).child("PASSWORD").setValue(password);
+                                clearfields();
+
+                                emailVerification();
 
 
                             }
@@ -170,7 +179,23 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
                         {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
+
+                           if( mAuth.getCurrentUser().isEmailVerified())
+                           {
+
                             dismissDialog();
+
+                            Intent i = new Intent(SIgnUp.this,Main.class);
+                            startActivity(i);
+                            finish();
+                            }
+
+                            else
+                           {
+                               dismissDialog();
+                               Toast.makeText(SIgnUp.this,"Verify your email first",Toast.LENGTH_LONG).show();
+
+                           }
 
 
 
@@ -188,6 +213,33 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
                     }
                 });
 
+    }
+
+    void emailVerification()
+    {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user!=null)
+        {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+
+                            if (task.isSuccessful()) {
+                                Toast.makeText(SIgnUp.this,
+                                        "Verification email sent ",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e(TAG, "sendEmailVerification", task.getException());
+                                Toast.makeText(SIgnUp.this,
+                                        "Failed to send verification email.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 
     boolean validateFields()
