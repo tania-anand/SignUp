@@ -25,17 +25,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-
-public class SIgnUp extends AppCompatActivity implements View.OnClickListener
+public class SignUp extends AppCompatActivity implements View.OnClickListener
 {
     EditText edemail;
     EditText edpassword;
     Button signup;
     TextView text;
-
-    String email="";
-    String password="";
 
     // for sign up activity create shared instance of FirebaseAuth
     private FirebaseAuth mAuth;
@@ -47,6 +42,9 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
     private static final String DATABASENAME="USER";
 
     boolean registerFlag=true;
+
+    // username creation
+    User user;
 
 
 
@@ -76,15 +74,13 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
         mAuth = FirebaseAuth.getInstance();
 
         mUsersDatabase = FirebaseDatabase.getInstance().getReference();
-
-
     }
 
     @Override
     public void onClick(View v)
     {
-        email = edemail.getText().toString().trim();
-        password=edpassword.getText().toString().trim();
+
+        setDetails();
 
 
 
@@ -100,10 +96,10 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
             {
                 if(registerFlag)
 
-                    register();
+                    registerEmail();
 
                 else
-                    signIn();
+                    signInEmail();
 
             }
 
@@ -111,10 +107,10 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
 
     }
 
-    void register()
+    void registerEmail()
     {
         initDialog(this);
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(user.getUsername(), user.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
                 {
                     @Override
@@ -131,8 +127,8 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
 
 
                                 Log.d("error", "createUserWithEmail:success");
-                                mUsersDatabase.child(DATABASENAME).child(uid).child("EMAIL").setValue(email);
-                                mUsersDatabase.child(DATABASENAME).child(uid).child("PASSWORD").setValue(password);
+                                mUsersDatabase.child(DATABASENAME).child(uid).child("EMAIL").setValue(user.getUsername());
+                                mUsersDatabase.child(DATABASENAME).child(uid).child("PASSWORD").setValue(user.getPassword());
                                 clearfields();
 
                                 emailVerification();
@@ -164,11 +160,11 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
     }
 
 
-    void signIn()
+    void signInEmail()
     {
         initDialog(this);
 
-        mAuth.signInWithEmailAndPassword(email,password)
+        mAuth.signInWithEmailAndPassword(user.getUsername(),user.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
                 {
 
@@ -185,7 +181,7 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
 
                             dismissDialog();
 
-                            Intent i = new Intent(SIgnUp.this,Main.class);
+                            Intent i = new Intent(SignUp.this,Main.class);
                             startActivity(i);
                             finish();
                             }
@@ -193,7 +189,7 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
                             else
                            {
                                dismissDialog();
-                               Toast.makeText(SIgnUp.this,"Verify your email first",Toast.LENGTH_LONG).show();
+                               Toast.makeText(SignUp.this,"Verify your email first",Toast.LENGTH_LONG).show();
 
                            }
 
@@ -228,12 +224,12 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
 
 
                             if (task.isSuccessful()) {
-                                Toast.makeText(SIgnUp.this,
+                                Toast.makeText(SignUp.this,
                                         "Verification email sent ",
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 Log.e(TAG, "sendEmailVerification", task.getException());
-                                Toast.makeText(SIgnUp.this,
+                                Toast.makeText(SignUp.this,
                                         "Failed to send verification email.",
                                         Toast.LENGTH_SHORT).show();
                             }
@@ -248,14 +244,14 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
         boolean flag = true;
 
 
-        if(email.equals(""))
+        if(user.getUsername().equals(""))
         {
             edemail.setError("Enter Email Id");
             flag = false;
         }
         else
         {
-            if(!email.contains("@") && !email.contains("."))
+            if(!user.getUsername().contains("@") && !user.getUsername().contains("."))
             {
                 edemail.setError("Enter Valid Email");
                 flag = false;
@@ -263,7 +259,7 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
         }
 
 
-        if(password.equals(""))
+        if(user.getPassword().equals(""))
         {
             edpassword.setError("Enter Password");
             flag = false;
@@ -300,6 +296,15 @@ public class SIgnUp extends AppCompatActivity implements View.OnClickListener
 
     public static void dismissDialog(){
         dialog.dismiss();
+    }
+
+    public void setDetails()
+    {
+        user = new User();
+        user.setUsername(edemail.getText().toString());
+        user.setPassword(edpassword.getText().toString());
+
+
     }
 
 }

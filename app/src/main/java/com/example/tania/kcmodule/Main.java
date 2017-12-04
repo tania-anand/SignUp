@@ -28,7 +28,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener
         if(v.getId()==R.id.logout)
         {
             FirebaseAuth.getInstance().signOut();
-            Intent i = new Intent(this,SIgnUp.class);
+            Intent i = new Intent(this,SignUp.class);
             startActivity(i);
             finish();
         }
